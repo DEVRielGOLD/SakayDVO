@@ -21,9 +21,9 @@
     <div class="w-full sm:max-w-[420px] h-screen sm:h-[844px] bg-slate-950 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden border-0 sm:border-8 sm:border-slate-800 relative">
         <header class="px-6 py-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-30">
             <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                        <i class="fa-solid fa-bus text-white text-sm"></i>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-center text-sky-400">
+                        <i class="fa-solid fa-bus text-2xl drop-shadow-md"></i>
                     </div>
                     <div>
                         <h1 class="font-extrabold text-lg tracking-tight text-white leading-tight">Sakay<span class="text-sky-400">DVO</span></h1>
@@ -64,9 +64,6 @@
                         <button onclick="setFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Transit</button>
                         <button onclick="setFilter('puj')" id="filter-puj" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Jeepney</button>
                         <button onclick="setFilter('bus')" id="filter-bus" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Free Bus</button>
-                        <button onclick="setFilter('mintal')" id="filter-mintal" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Mintal Lines</button>
-                        <button onclick="setFilter('toril')" id="filter-toril" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Toril Lines</button>
-                        <button onclick="setFilter('panacan')" id="filter-panacan" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Panacan Lines</button>
                     </div>
                 </div>
 
@@ -260,6 +257,7 @@
                         }
                     },
                     function(error) {
+                        console.log('Geolocation error or permission denied');
                     },
                     { enableHighAccuracy: true }
                 );
@@ -323,14 +321,7 @@
             vehicleList.innerHTML = '';
 
             const filtered = busRoutes.filter(r => {
-                let matchesFilter = true;
-                if (currentFilter === 'all') {
-                    matchesFilter = true;
-                } else if (currentFilter === 'puj' || currentFilter === 'bus') {
-                    matchesFilter = (r.type === currentFilter);
-                } else {
-                    matchesFilter = (r.category === currentFilter);
-                }
+                const matchesFilter = (currentFilter === 'all' || r.type === currentFilter);
                 const matchesSearch = r.name.toLowerCase().includes(searchQuery) || r.stops.toLowerCase().includes(searchQuery);
                 return matchesFilter && matchesSearch;
             });
@@ -400,7 +391,7 @@
 
         function setFilter(type) {
             currentFilter = type;
-            ['all', 'puj', 'bus', 'mintal', 'toril', 'panacan'].forEach(t => {
+            ['all', 'puj', 'bus'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
                 if (t === type) {
                     btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0";

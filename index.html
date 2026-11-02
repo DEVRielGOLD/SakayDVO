@@ -14,34 +14,38 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .leaflet-container { width: 100%; height: 100%; background: #0f172a; }
-        .leaflet-tile { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); }
+        .leaflet-tile { filter: brightness(0.65) invert(1) contrast(2.8) hue-rotate(200deg) saturate(0.35); }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-0 sm:p-4">
     <div class="w-full sm:max-w-[420px] h-screen sm:h-[844px] bg-slate-950 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden border-0 sm:border-8 sm:border-slate-800 relative">
-        <header class="px-6 py-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-30">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-1">
-                    <div class="flex items-center justify-center text-white ml-2 mr-1">
-                        <i class="fa-solid fa-bus text-2xl drop-shadow-md"></i>
+        <header class="px-5 py-3.5 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 z-30">
+            <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+                        <i class="fa-solid fa-bus text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="font-extrabold text-lg tracking-tight text-white leading-tight">Sakay<span class="text-sky-400">DVO</span></h1>
-                        <p class="text-[10px] text-slate-400 font-medium">Davao City Sakay Tracker</p>
+                        <h1 class="font-extrabold text-base tracking-tight text-white leading-tight">Sakay<span class="text-sky-400">DVO</span></h1>
+                        <p class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Davao City Sakay Tracker</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="showToast('No new notifications')" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition">
-                        <i class="fa-regular fa-bell text-sm"></i>
+                <div class="flex items-center space-x-1.5">
+                    <button onclick="openFareModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 text-xs font-bold transition flex items-center space-x-1">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>₱ Fare</span>
+                    </button>
+                    <button onclick="showToast('No new notifications')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition">
+                        <i class="fa-regular fa-bell text-xs"></i>
                     </button>
                 </div>
             </div>
             <div class="bg-slate-950 p-1 rounded-2xl flex border border-slate-800/80">
-                <button id="commuterBtn" onclick="switchView('commuter')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 bg-blue-600 text-white shadow-md shadow-blue-600/30">
+                <button id="commuterBtn" onclick="switchView('commuter')" class="flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30">
                     <i class="fa-solid fa-person-walking-arrow-right"></i>
                     <span>Commuter View</span>
                 </button>
-                <button id="driverBtn" onclick="switchView('driver')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-400 hover:text-white">
+                <button id="driverBtn" onclick="switchView('driver')" class="flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-id-card-clip"></i>
                     <span>Driver View</span>
                 </button>
@@ -50,103 +54,122 @@
 
         <main class="flex-1 relative overflow-hidden flex flex-col bg-slate-900">
             <div id="commuterView" class="absolute inset-0 flex flex-col transition-opacity duration-300 z-10">
-                <div class="p-4 bg-slate-900/90 backdrop-blur border-b border-slate-800 space-y-3 z-20">
+                <div class="p-3.5 bg-slate-900/90 backdrop-blur border-b border-slate-800 space-y-2.5 z-20">
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass text-xs"></i>
                         </span>
-                        <input type="text" id="routeSearch" placeholder="Search route or stop (e.g. Mintal, Toril, Panacan, Roxas)" oninput="filterVehicles()" class="w-full bg-slate-800/90 text-sm text-slate-100 placeholder-slate-400 pl-10 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition">
+                        <input type="text" id="routeSearch" placeholder="Search route or stop (e.g. Mintal, Toril, Panacan)" oninput="filterVehicles()" class="w-full bg-slate-800/90 text-xs text-slate-100 placeholder-slate-400 pl-9 pr-8 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition">
                         <button onclick="clearSearch()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white">
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
-                    <div class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
-                        <button onclick="setFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Transit</button>
-                        <button onclick="setFilter('puj')" id="filter-puj" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Jeepney</button>
-                        <button onclick="setFilter('bus')" id="filter-bus" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Free Bus</button>
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-0.5 no-scrollbar">
+                        <button onclick="setFilter('all')" id="filter-all" class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Transit</button>
+                        <button onclick="setFilter('puj')" id="filter-puj" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Jeepney</button>
+                        <button onclick="setFilter('bus')" id="filter-bus" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Free Bus</button>
                     </div>
                 </div>
 
                 <div class="flex-1 relative overflow-hidden bg-slate-950">
                     <div id="map" class="absolute inset-0 z-10"></div>
-                    <div class="absolute right-4 top-4 flex flex-col space-y-2 z-20">
-                        <button onclick="locateUser()" class="w-10 h-10 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-sky-400 rounded-xl shadow-lg flex items-center justify-center transition" title="Center on GPS">
-                            <i class="fa-solid fa-crosshairs text-sm"></i>
+                    <div class="absolute right-3 top-3 flex flex-col space-y-2 z-20">
+                        <button onclick="locateUser()" class="w-9 h-9 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-sky-400 rounded-xl shadow-lg flex items-center justify-center transition" title="Center on GPS">
+                            <i class="fa-solid fa-crosshairs text-xs"></i>
                         </button>
-                        <button onclick="refreshVehicles()" class="w-10 h-10 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-sky-400 rounded-xl shadow-lg flex items-center justify-center transition" title="Refresh Live Data">
-                            <i class="fa-solid fa-rotate text-sm"></i>
+                        <button onclick="refreshVehicles()" class="w-9 h-9 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-sky-400 rounded-xl shadow-lg flex items-center justify-center transition" title="Refresh Live Data">
+                            <i class="fa-solid fa-rotate text-xs"></i>
                         </button>
+                        <button onclick="clearSelectedRoute()" id="clearPolylineBtn" class="w-9 h-9 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-rose-400 rounded-xl shadow-lg items-center justify-center transition hidden" title="Clear Drawn Route">
+                            <i class="fa-solid fa-route text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div id="activeRouteBanner" class="absolute top-3 left-3 right-14 bg-slate-900/95 border border-sky-500/50 rounded-xl p-2.5 shadow-xl backdrop-blur-md z-20 hidden">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div id="activeRouteDot" class="w-3 h-3 rounded-full bg-sky-400 animate-ping"></div>
+                                <div>
+                                    <h4 id="activeRouteTitle" class="text-xs font-extrabold text-white">Route Line Active</h4>
+                                    <p id="activeRouteSub" class="text-[10px] text-sky-300 font-medium">Click stops to inspect</p>
+                                </div>
+                            </div>
+                            <button onclick="clearSelectedRoute()" class="text-slate-400 hover:text-white px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold">
+                                Reset
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-900 border-t border-slate-800 p-4 rounded-t-3xl shadow-2xl z-20 max-h-[280px] flex flex-col">
-                    <div class="w-12 h-1 bg-slate-700 rounded-full mx-auto mb-3"></div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h2 class="font-bold text-sm text-slate-200 flex items-center">
-                            <i class="fa-solid fa-bus text-sky-400 mr-2"></i> Jeepney & Free Bus Schedules
+                <div class="bg-slate-900 border-t border-slate-800 p-3.5 rounded-t-3xl shadow-2xl z-20 max-h-[300px] flex flex-col">
+                    <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto mb-2.5"></div>
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h2 class="font-bold text-xs text-slate-200 flex items-center">
+                            <i class="fa-solid fa-bus text-sky-400 mr-1.5"></i> Davao PUJ & Bus Schedules
                         </h2>
-                        <span id="vehicleCount" class="text-xs bg-slate-800 text-sky-400 px-2 py-0.5 rounded-full font-semibold border border-slate-700">11 routes</span>
+                        <span id="vehicleCount" class="text-[11px] bg-slate-800 text-sky-400 px-2 py-0.5 rounded-full font-semibold border border-slate-700">11 routes</span>
                     </div>
-                    <div id="vehicleList" class="space-y-2.5 overflow-y-auto pr-1 no-scrollbar"></div>
+                    <div id="vehicleList" class="space-y-2 overflow-y-auto pr-1 no-scrollbar"></div>
                 </div>
             </div>
 
-            <div id="driverView" class="absolute inset-0 flex flex-col bg-slate-900 p-5 overflow-y-auto hidden z-10">
-                <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-2xl p-4 mb-5 flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-lg shrink-0">
+            <div id="driverView" class="absolute inset-0 flex flex-col bg-slate-900 p-4 overflow-y-auto hidden z-10">
+                <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-2xl p-3.5 mb-4 flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-base shrink-0">
                         <i class="fa-solid fa-id-card"></i>
                     </div>
                     <div>
-                        <h2 class="font-bold text-sm text-white">Jeepney & Free Bus Driver Portal</h2>
-                        <p class="text-xs text-slate-300">Broadcast your live location and capacity in 1-touch.</p>
+                        <h2 class="font-bold text-xs text-white">Jeepney & Free Bus Driver Portal</h2>
+                        <p class="text-[10px] text-slate-300">Broadcast your live location and capacity in 1-touch.</p>
                     </div>
                 </div>
 
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Assigned Route</label>
-                    <select id="driverRouteSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-semibold text-white focus:outline-none focus:border-amber-500">
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 mb-3.5">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Select Assigned Route</label>
+                    <select id="driverRouteSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs font-semibold text-white focus:outline-none focus:border-amber-500">
                         <option>PUJ 5A: Toril -> Roxas Blvd (Real-time)</option>
                         <option>PUJ 10: Mintal -> Agdao (Real-time)</option>
+                        <option>PUJ 3: Bangkal -> Roxas (Real-time)</option>
+                        <option>PUJ 7: Buhangin -> City Hall (Real-time)</option>
+                        <option>PUJ 14: Panacan -> Roxas (Real-time)</option>
                         <option>R102: Toril -> GE Torres (6AM-10AM / 4PM-9PM)</option>
                         <option>R103: Toril -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R402: Mintal -> GE Torres (6AM-10AM / 4PM-9PM)</option>
                         <option>R403: Mintal -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R503: Bangkal -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R603: Buhangin -> Roxas (6AM-10AM / 4PM-9PM)</option>
-                        <option>R763: Panacan (via Buhangin) -> Roxas (6AM-10AM / 4PM-9PM)</option>
-                        <option>R783: Panacan (via Angliongto) -> Roxas (6AM-10AM / 4PM-9PM)</option>
-                        <option>R793: Panacan (via R Castillo) -> Roxas (6AM-10AM / 4PM-9PM)</option>
+                        <option>R763: Panacan (via Buhangin) -> Roxas</option>
                     </select>
                 </div>
 
-                <div id="broadcastCard" class="bg-slate-950 border-2 border-slate-800 rounded-3xl p-6 text-center mb-5 transition-all shadow-xl relative overflow-hidden">
+                <div id="broadcastCard" class="bg-slate-950 border-2 border-slate-800 rounded-3xl p-5 text-center mb-4 transition-all shadow-xl relative overflow-hidden">
                     <div id="broadcastGlow" class="absolute inset-0 bg-blue-600/5 opacity-0 transition-opacity"></div>
                     <div class="relative z-10">
-                        <div id="broadcastStatusIcon" class="w-20 h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto mb-4 text-3xl text-slate-400 transition-all shadow-inner">
+                        <div id="broadcastStatusIcon" class="w-16 h-16 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto mb-3 text-2xl text-slate-400 transition-all shadow-inner">
                             <i class="fa-solid fa-tower-broadcast"></i>
                         </div>
-                        <h3 id="broadcastTitle" class="font-extrabold text-xl text-white mb-1">Broadcasting Paused</h3>
-                        <p id="broadcastDesc" class="text-xs text-slate-400 mb-6 max-w-[260px] mx-auto">Tap below to start sharing your real-time vehicle location and passenger load with commuters.</p>
-                        <button onclick="toggleBroadcast()" id="broadcastBtn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-sm shadow-lg shadow-blue-600/40 transition flex items-center justify-center space-x-2">
+                        <h3 id="broadcastTitle" class="font-extrabold text-base text-white mb-1">Broadcasting Paused</h3>
+                        <p id="broadcastDesc" class="text-[11px] text-slate-400 mb-4 max-w-[240px] mx-auto">Tap below to start sharing your real-time vehicle location and passenger load with commuters.</p>
+                        <button onclick="toggleBroadcast()" id="broadcastBtn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg shadow-blue-600/40 transition flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-power-off"></i>
                             <span id="broadcastBtnText">Start One-Touch Broadcast</span>
                         </button>
                     </div>
                 </div>
 
-                <div id="loadSelectorContainer" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 opacity-50 pointer-events-none transition-all">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Current Passenger Load Status</label>
-                    <div class="grid grid-cols-3 gap-2.5">
-                        <button onclick="setLoadStatus('many')" id="load-many" class="py-3 px-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold text-xs flex flex-col items-center space-y-1 transition">
-                            <i class="fa-solid fa-chair text-sm"></i>
+                <div id="loadSelectorContainer" class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 opacity-50 pointer-events-none transition-all">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">Current Passenger Load Status</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setLoadStatus('many')" id="load-many" class="py-2.5 px-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold text-[11px] flex flex-col items-center space-y-1 transition">
+                            <i class="fa-solid fa-chair text-xs"></i>
                             <span>Many Seats</span>
                         </button>
-                        <button onclick="setLoadStatus('few')" id="load-few" class="py-3 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-xs flex flex-col items-center space-y-1 transition">
-                            <i class="fa-solid fa-people-arrows text-sm"></i>
+                        <button onclick="setLoadStatus('few')" id="load-few" class="py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-[11px] flex flex-col items-center space-y-1 transition">
+                            <i class="fa-solid fa-people-arrows text-xs"></i>
                             <span>Few Seats</span>
                         </button>
-                        <button onclick="setLoadStatus('full')" id="load-full" class="py-3 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-xs flex flex-col items-center space-y-1 transition">
-                            <i class="fa-solid fa-ban text-sm"></i>
+                        <button onclick="setLoadStatus('full')" id="load-full" class="py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-[11px] flex flex-col items-center space-y-1 transition">
+                            <i class="fa-solid fa-ban text-xs"></i>
                             <span>Full / No Vacancy</span>
                         </button>
                     </div>
@@ -154,75 +177,448 @@
             </div>
         </main>
 
+        <div id="fareModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 opacity-0 pointer-events-none transition-all duration-300">
+            <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-[400px] rounded-t-3xl sm:rounded-3xl p-5 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl relative">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                            <i class="fa-solid fa-receipt text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-sm text-white">LTFRB Davao Fare Matrix</h3>
+                            <p class="text-[9px] text-amber-400 font-bold">Effective Sept 2026 Rate (₱14 Base)</p>
+                        </div>
+                    </div>
+                    <button onclick="closeFareModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-300">Passenger Type</label>
+                        <div class="bg-slate-900 p-1 rounded-xl flex border border-slate-800">
+                            <button id="pTypeRegular" onclick="setPassengerType('regular')" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-sky-500 text-white transition">Regular</button>
+                            <button id="pTypeDiscount" onclick="setPassengerType('discount')" class="px-3 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition">Student/PWD/Senior</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-slate-300">Distance (Kms)</label>
+                            <span id="calcDistanceVal" class="text-xs font-extrabold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-lg border border-sky-500/20">4.0 km</span>
+                        </div>
+                        <input type="range" id="calcDistanceInput" min="1" max="50" step="1" value="4" oninput="calculateFareFromSlider()" class="w-full accent-sky-500 cursor-pointer">
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-medium">Estimated PUJ Fare</p>
+                            <span id="calcFareResult" class="text-2xl font-black text-emerald-400">₱14.00</span>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[9px] text-slate-400">Base (1-4 km): <strong id="baseRateTag" class="text-slate-200">₱14.00</strong></p>
+                            <p class="text-[9px] text-slate-400">Add'l km: <strong id="addRateTag" class="text-slate-200">+₱2.00/km</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 mb-4 space-y-2.5">
+                    <h4 class="text-xs font-bold text-slate-200 flex items-center">
+                        <i class="fa-solid fa-route text-sky-400 mr-1.5"></i> Route Point-to-Point Fare Calculator
+                    </h4>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">Select Route</label>
+                            <select id="p2pRouteSelect" onchange="updateP2POptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs font-semibold text-white focus:outline-none focus:border-sky-500">
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Origin Stop</label>
+                                <select id="p2pOriginSelect" onchange="calculateP2PFare()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs font-semibold text-white focus:outline-none focus:border-sky-500">
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 mb-1">Destination Stop</label>
+                                <select id="p2pDestSelect" onchange="calculateP2PFare()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs font-semibold text-white focus:outline-none focus:border-sky-500">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="p2pResultBox" class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                        <span class="text-slate-400 font-medium">Route Segment: <strong id="p2pDistText" class="text-sky-400">0 km</strong></span>
+                        <span class="font-extrabold text-emerald-400 text-sm" id="p2pFareText">₱14.00</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3">
+                    <h4 class="text-xs font-bold text-slate-200 mb-2">Official LTFRB XI General Guide Quick Reference</h4>
+                    <div class="max-h-36 overflow-y-auto no-scrollbar rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-[10px]">
+                            <thead class="bg-slate-900 text-slate-300 font-bold sticky top-0">
+                                <tr>
+                                    <th class="p-1.5 border-b border-slate-800">Km</th>
+                                    <th class="p-1.5 border-b border-slate-800">Regular</th>
+                                    <th class="p-1.5 border-b border-slate-800">Discounted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quickFareTable" class="divide-y divide-slate-800/60 text-slate-300">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="toast" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-2">
             <i class="fa-solid fa-circle-check text-sky-400"></i>
             <span id="toastMsg">Action successful</span>
         </div>
 
-        <nav class="bg-slate-950 border-t border-slate-800 py-3 px-6 flex justify-around items-center text-slate-400 text-xs font-semibold z-30">
-            <button onclick="showToast('Home Dashboard')" class="flex flex-col items-center text-sky-400 hover:text-white transition">
-                <i class="fa-solid fa-map text-base mb-1"></i>
-                <span>Explore</span>
+        <nav class="bg-slate-950 border-t border-slate-800 py-2.5 px-6 flex justify-around items-center text-slate-400 text-xs font-semibold z-30">
+            <button onclick="switchNav('explore')" id="nav-explore" class="flex flex-col items-center text-sky-400 hover:text-white transition">
+                <i class="fa-solid fa-map text-base mb-0.5"></i>
+                <span class="text-[10px]">Explore</span>
             </button>
             <button onclick="showToast('Saved favorite routes')" class="flex flex-col items-center hover:text-white transition">
-                <i class="fa-solid fa-bookmark text-base mb-1"></i>
-                <span>Saved</span>
+                <i class="fa-solid fa-bookmark text-base mb-0.5"></i>
+                <span class="text-[10px]">Saved</span>
             </button>
-            <button onclick="showToast('Fare Matrix & Calculator')" class="flex flex-col items-center hover:text-white transition">
-                <i class="fa-solid fa-ticket text-base mb-1"></i>
-                <span>Fares</span>
+            <button onclick="openFareModal()" class="flex flex-col items-center hover:text-white transition">
+                <i class="fa-solid fa-calculator text-base mb-0.5"></i>
+                <span class="text-[10px]">Fares</span>
             </button>
             <button onclick="showToast('Driver & Commuter Support')" class="flex flex-col items-center hover:text-white transition">
-                <i class="fa-solid fa-circle-question text-base mb-1"></i>
-                <span>Help</span>
+                <i class="fa-solid fa-circle-question text-base mb-0.5"></i>
+                <span class="text-[10px]">Help</span>
             </button>
         </nav>
     </div>
 
     <script>
         const busRoutes = [
-            { id: 'PUJ5A', category: 'toril', type: 'puj', name: 'Traditional PUJ - 5A', schedule: 'Real-time (5AM-10PM)', stops: 'Toril Crossing, Bangkal, Matina Crossing, Ecoland Terminal, Roxas Blvd', lat: 7.0850, lng: 125.5150, color: '#eab308', fare: '₱15.00' },
-            { id: 'PUJ10', category: 'mintal', type: 'puj', name: 'Traditional PUJ - 10', schedule: 'Real-time (5AM-10PM)', stops: 'Mintal, Ulas, Bangkal, Matina Crossing, Roxas Ave., Agdao', lat: 7.1200, lng: 125.5350, color: '#eab308', fare: '₱16.00' },
-            { id: 'R102', category: 'toril', type: 'bus', name: 'R102: Toril -> GE Torres', schedule: '6AM-10AM & 4PM-9PM', stops: 'Toril District Hall, Fusion GTH, Pepsi Dumoy, Bago Aplaya Crossing, Gulf View, Jollibee Puan, Coke Ulas, Ateneo Senior High, SPED Bangkal, Tahimik Ave. Matina, Matina Crossing, Kawayan Drive, GE Torres', lat: 7.1857, lng: 125.4493, color: '#3b82f6', fare: '₱0.00 (Free)' },
-            { id: 'R103', category: 'toril', type: 'bus', name: 'R103: Toril -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Toril District Hall, Fusion GTH, Pepsi Dumoy, Bago Aplaya Crossing, Coastal Rd. Times Beach, Ecoland Terminal, Felcris Centrale, Davao City Police Office, CM Recto Ave., Red Cross Roxas', lat: 7.1807, lng: 125.4453, color: '#3b82f6', fare: '₱0.00 (Free)' },
-            { id: 'R402', category: 'mintal', type: 'bus', name: 'R402: Mintal -> GE Torres', schedule: '6AM-10AM & 4PM-9PM', stops: 'Mintal Palengke, Sto Niño Mintal, Green Meadows, Catalunan Pequeño, Wellspring Village, Ateneo Senior High, SPED Bangkal, Tahimik Ave, Matina Crossing, Kawayan Drive, DGT, Water Dist. Matina, NCCC Maa', lat: 7.2057, lng: 125.4153, color: '#10b981', fare: '₱0.00 (Free)' },
-            { id: 'R403', category: 'mintal', type: 'bus', name: 'R403: Mintal -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Mintal Palengke, Sto Niño Mintal, Green Meadows, Catalunan Pequeño, Wellspring Village, Ateneo Senior High, SPED Bangkal, Tahimik Ave, Matina Crossing, Kawayan Drive, DGT, Pichon St., Grand Menseng Hotel, CM Recto, San Pedro St., UM Matina, Alorica, Shrine Hills', lat: 7.2107, lng: 125.4203, color: '#10b981', fare: '₱0.00 (Free)' },
-            { id: 'R503', category: 'toril', type: 'bus', name: 'R503: Bangkal -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Hope Ave. Bangkal, Ateneo Senior High, SPED Bangkal, Tahimik Ave. Matina, Matina Crossing, Kawayan Drive, DGT, Water Dist. Matina, NCCC Maa, Ateneo Matina, Pichon St. cor Quirino Ave.', lat: 7.1707, lng: 125.4503, color: '#f59e0b', fare: '₱0.00 (Free)' },
-            { id: 'R603', category: 'panacan', type: 'bus', name: 'R603: Buhangin -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Citymall Northtown, Jollibee Cabantian, NHA Buhangin, Buhangin Gym, Ladislawa, Abreeza Mall, NCCC Mall VP, Red Cross Roxas, Davao Mental Hospital, JP Laurel Flyover', lat: 7.1107, lng: 125.6203, color: '#8b5cf6', fare: '₱0.00 (Free)' },
-            { id: 'R763', category: 'panacan', type: 'bus', name: 'R763: Panacan (via Buhangin) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Panacan Bypass Rd., LPU Davao, Sta. Lucia Mall, Mcdo Pagibig, NHA Buhangin, Buhangin Gym, Ladislawa, Abreeza Mall, NCCC Mall VP', lat: 7.1307, lng: 125.6403, color: '#ec4899', fare: '₱0.00 (Free)' },
-            { id: 'R783', category: 'panacan', type: 'bus', name: 'R783: Panacan (via Angliongto) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Panacan Bypass Rd., LPU Davao, Sta. Lucia Mall, Mcdo Pagibig, Punad Bypass, Angliongto Arcade, Phil. Nikkei Jin Kai, SM Lanang, Carmelite Lanang', lat: 7.1207, lng: 125.6303, color: '#06b6d4', fare: '₱0.00 (Free)' },
-            { id: 'R793', category: 'panacan', type: 'bus', name: 'R793: Panacan (via R Castillo) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Sasa Palengke, Philippine Ports Authority, Shell Doña Salud, Old Airport, Doña Pilar, Nova Tierra, Jerome R. Castillo, Holy Cross R. Castillo, Agdao Flyover', lat: 7.1407, lng: 125.6503, color: '#f43f5e', fare: '₱0.00 (Free)' }
+            { 
+                id: 'PUJ5A', 
+                category: 'toril', 
+                type: 'puj', 
+                name: 'Traditional PUJ - 5A', 
+                schedule: 'Real-time (5AM-10PM)', 
+                stops: 'Toril Crossing, Bangkal, Matina Crossing, Ecoland Terminal, Roxas Blvd', 
+                lat: 7.0850, 
+                lng: 125.5150, 
+                color: '#f59e0b', 
+                totalKm: 16,
+                waypoints: [
+                    [7.0205, 125.4985, 'Toril Crossing'],
+                    [7.0425, 125.5210, 'Pepsi Dumoy'],
+                    [7.0620, 125.5410, 'Ulas Junction'],
+                    [7.0760, 125.5580, 'Bangkal'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0890, 125.5920, 'Ecoland Terminal'],
+                    [7.0725, 125.6120, 'Roxas Blvd']
+                ]
+            },
+            { 
+                id: 'PUJ10', 
+                category: 'mintal', 
+                type: 'puj', 
+                name: 'Traditional PUJ - 10', 
+                schedule: 'Real-time (5AM-10PM)', 
+                stops: 'Mintal, Ulas, Bangkal, Matina Crossing, Roxas Ave., Agdao', 
+                lat: 7.1200, 
+                lng: 125.5350, 
+                color: '#f59e0b', 
+                totalKm: 18,
+                waypoints: [
+                    [7.1285, 125.5010, 'Mintal Palengke'],
+                    [7.1080, 125.5240, 'Green Meadows'],
+                    [7.0890, 125.5450, 'Ulas'],
+                    [7.0760, 125.5580, 'Bangkal'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0725, 125.6120, 'Roxas Ave.'],
+                    [7.0810, 125.6260, 'Agdao Market']
+                ]
+            },
+            { 
+                id: 'PUJ3', 
+                category: 'toril', 
+                type: 'puj', 
+                name: 'Traditional PUJ - 3', 
+                schedule: 'Real-time (5AM-10PM)', 
+                stops: 'Bangkal, Matina, DGT, Pichon St., Quirino Ave', 
+                lat: 7.0760, 
+                lng: 125.5580, 
+                color: '#eab308', 
+                totalKm: 8,
+                waypoints: [
+                    [7.0760, 125.5580, 'Bangkal'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0810, 125.5890, 'Davao Global Township'],
+                    [7.0710, 125.6050, 'Pichon St.'],
+                    [7.0740, 125.6130, 'Quirino Ave']
+                ]
+            },
+            { 
+                id: 'R102', 
+                category: 'toril', 
+                type: 'bus', 
+                name: 'R102: Toril -> GE Torres', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Toril District Hall, Dumoy, Bago Aplaya, Ulas, Bangkal, Matina, GE Torres', 
+                lat: 7.0250, 
+                lng: 125.5000, 
+                color: '#3b82f6', 
+                totalKm: 17,
+                waypoints: [
+                    [7.0180, 125.4960, 'Toril District Hall'],
+                    [7.0390, 125.5180, 'Pepsi Dumoy'],
+                    [7.0510, 125.5310, 'Bago Aplaya Crossing'],
+                    [7.0620, 125.5410, 'Ulas Junction'],
+                    [7.0760, 125.5580, 'SPED Bangkal'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0910, 125.5990, 'GE Torres']
+                ]
+            },
+            { 
+                id: 'R103', 
+                category: 'toril', 
+                type: 'bus', 
+                name: 'R103: Toril -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Toril Hall, Dumoy, Bago Aplaya, Coastal Rd, Ecoland, Roxas', 
+                lat: 7.0220, 
+                lng: 125.4980, 
+                color: '#3b82f6', 
+                totalKm: 19,
+                waypoints: [
+                    [7.0180, 125.4960, 'Toril District Hall'],
+                    [7.0390, 125.5180, 'Dumoy'],
+                    [7.0510, 125.5310, 'Bago Aplaya Crossing'],
+                    [7.0650, 125.5680, 'Coastal Rd Times Beach'],
+                    [7.0890, 125.5920, 'Ecoland Terminal'],
+                    [7.0725, 125.6120, 'Red Cross Roxas']
+                ]
+            },
+            { 
+                id: 'R402', 
+                category: 'mintal', 
+                type: 'bus', 
+                name: 'R402: Mintal -> GE Torres', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Mintal Market, Sto Niño, Catalunan Pequeño, Bangkal, GE Torres, NCCC Maa', 
+                lat: 7.1285, 
+                lng: 125.5010, 
+                color: '#10b981', 
+                totalKm: 15,
+                waypoints: [
+                    [7.1285, 125.5010, 'Mintal Palengke'],
+                    [7.1150, 125.5120, 'Sto Niño Mintal'],
+                    [7.0980, 125.5310, 'Catalunan Pequeño'],
+                    [7.0760, 125.5580, 'SPED Bangkal'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0980, 125.5890, 'NCCC Maa']
+                ]
+            },
+            { 
+                id: 'R403', 
+                category: 'mintal', 
+                type: 'bus', 
+                name: 'R403: Mintal -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Mintal, Catalunan Pequeño, Matina Crossing, DGT, CM Recto, Roxas', 
+                lat: 7.1285, 
+                lng: 125.5010, 
+                color: '#10b981', 
+                totalKm: 18,
+                waypoints: [
+                    [7.1285, 125.5010, 'Mintal Palengke'],
+                    [7.0980, 125.5310, 'Catalunan Pequeño'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0810, 125.5890, 'DGT'],
+                    [7.0730, 125.6110, 'CM Recto'],
+                    [7.0725, 125.6120, 'Roxas Ave']
+                ]
+            },
+            { 
+                id: 'R503', 
+                category: 'toril', 
+                type: 'bus', 
+                name: 'R503: Bangkal -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Bangkal, Ateneo Senior High, Matina Crossing, NCCC Maa, Quirino Ave', 
+                lat: 7.0760, 
+                lng: 125.5580, 
+                color: '#f97316', 
+                totalKm: 9,
+                waypoints: [
+                    [7.0760, 125.5580, 'Bangkal'],
+                    [7.0810, 125.5650, 'Ateneo Senior High'],
+                    [7.0850, 125.5750, 'Matina Crossing'],
+                    [7.0980, 125.5890, 'NCCC Maa'],
+                    [7.0740, 125.6130, 'Quirino Ave']
+                ]
+            },
+            { 
+                id: 'R603', 
+                category: 'panacan', 
+                type: 'bus', 
+                name: 'R603: Buhangin -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Citymall Northtown, Cabantian, Buhangin Gym, Abreeza Mall, Roxas', 
+                lat: 7.1210, 
+                lng: 125.6150, 
+                color: '#8b5cf6', 
+                totalKm: 12,
+                waypoints: [
+                    [7.1350, 125.6190, 'Citymall Northtown'],
+                    [7.1180, 125.6120, 'Buhangin Gym'],
+                    [7.0950, 125.6090, 'Abreeza Mall'],
+                    [7.0820, 125.6110, 'Victoria Plaza'],
+                    [7.0725, 125.6120, 'Red Cross Roxas']
+                ]
+            },
+            { 
+                id: 'R763', 
+                category: 'panacan', 
+                type: 'bus', 
+                name: 'R763: Panacan (via Buhangin) -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Panacan Depot, LPU Davao, Buhangin Gym, Abreeza Mall, Roxas', 
+                lat: 7.1490, 
+                lng: 125.6580, 
+                color: '#ec4899', 
+                totalKm: 16,
+                waypoints: [
+                    [7.1490, 125.6580, 'Panacan Depot'],
+                    [7.1380, 125.6390, 'LPU Davao'],
+                    [7.1180, 125.6120, 'Buhangin Gym'],
+                    [7.0950, 125.6090, 'Abreeza Mall'],
+                    [7.0725, 125.6120, 'Roxas Ave']
+                ]
+            },
+            { 
+                id: 'R783', 
+                category: 'panacan', 
+                type: 'bus', 
+                name: 'R783: Panacan (via Angliongto) -> Roxas', 
+                schedule: '6AM-10AM & 4PM-9PM', 
+                stops: 'Panacan Depot, Angliongto, Nikkei Jin Kai, SM Lanang, Roxas', 
+                lat: 7.1450, 
+                lng: 125.6550, 
+                color: '#06b6d4', 
+                totalKm: 15,
+                waypoints: [
+                    [7.1490, 125.6580, 'Panacan Depot'],
+                    [7.1190, 125.6350, 'Angliongto Arcade'],
+                    [7.1080, 125.6290, 'SM Lanang Premier'],
+                    [7.0920, 125.6180, 'Carmelite Lanang'],
+                    [7.0725, 125.6120, 'Roxas Ave']
+                ]
+            }
         ];
 
         let currentFilter = 'all';
+        let passengerType = 'regular';
         let isBroadcasting = false;
         let currentLoad = 'many';
         let map;
         let markerLayers = [];
+        let polylineLayer = null;
+        let stopMarkerLayers = [];
         let userMarker = null;
         let userAccuracyCircle = null;
+        let selectedRouteId = null;
 
         window.onload = function() {
-            if (typeof L !== 'undefined') {
-                initMap();
-            } else {
-                window.addEventListener('load', initMap);
-            }
+            initMap();
+            populateQuickFareTable();
+            populateP2PRoutes();
             renderRoutes();
             initGeolocation();
             setInterval(updateBusPositions, 4000);
         };
+
+        function calculateFare(distanceKm, type = 'regular') {
+            const dist = Math.max(1, Math.ceil(distanceKm));
+            if (type === 'regular') {
+                if (dist <= 4) return 14.00;
+                return 14.00 + ((dist - 4) * 2.00);
+            } else {
+                if (dist <= 4) return 11.25;
+                return 11.25 + ((dist - 4) * 1.60);
+            }
+        }
 
         function initMap() {
             if (typeof L === 'undefined') {
                 setTimeout(initMap, 300);
                 return;
             }
-            map = L.map('map', { zoomControl: false }).setView([7.1907, 125.4553], 12);
+            map = L.map('map', { zoomControl: false }).setView([7.0850, 125.5600], 12);
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19
             }).addTo(map);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
+        }
+
+        function drawRouteLine(routeId) {
+            const route = busRoutes.find(r => r.id === routeId);
+            if (!route || !route.waypoints) return;
+
+            clearSelectedRoute();
+            selectedRouteId = routeId;
+
+            const latLngs = route.waypoints.map(wp => [wp[0], wp[1]]);
+            
+            polylineLayer = L.polyline(latLngs, {
+                color: route.color || '#38bdf8',
+                weight: 5,
+                opacity: 0.9,
+                dashArray: route.type === 'puj' ? null : '10, 6',
+                lineJoin: 'round'
+            }).addTo(map);
+
+            route.waypoints.forEach((wp, idx) => {
+                const isTerminus = idx === 0 || idx === route.waypoints.length - 1;
+                const stopIcon = L.divIcon({
+                    className: '',
+                    html: `<div style="width:${isTerminus ? '14px':'10px'};height:${isTerminus ? '14px':'10px'};background:${isTerminus ? '#ffffff':route.color};border:2px solid ${route.color};border-radius:50%;box-shadow:0 0 8px rgba(0,0,0,0.5);"></div>`,
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                });
+                const stopMarker = L.marker([wp[0], wp[1]], { icon: stopIcon }).addTo(map);
+                stopMarker.bindPopup(`
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;color:#0f172a;">
+                        <div style="font-size:10px;color:#0284c7;font-weight:800;text-transform:uppercase;">Stop #${idx + 1}</div>
+                        <div style="font-size:12px;font-weight:700;">${wp[2]}</div>
+                        <div style="font-size:10px;color:#475569;">Route: ${route.name}</div>
+                    </div>
+                `);
+                stopMarkerLayers.push(stopMarker);
+            });
+
+            map.fitBounds(polylineLayer.getBounds(), { padding: [40, 40] });
+
+            document.getElementById('activeRouteBanner').classList.remove('hidden');
+            document.getElementById('clearPolylineBtn').classList.remove('hidden');
+            document.getElementById('clearPolylineBtn').classList.add('flex');
+            document.getElementById('activeRouteTitle').innerText = route.name;
+            document.getElementById('activeRouteSub').innerText = `${route.waypoints.length} key stops | Fare: ${route.type === 'bus' ? 'FREE' : '₱' + calculateFare(route.totalKm, 'regular').toFixed(2)}`;
+        }
+
+        function clearSelectedRoute() {
+            if (polylineLayer) {
+                map.removeLayer(polylineLayer);
+                polylineLayer = null;
+            }
+            stopMarkerLayers.forEach(m => map.removeLayer(m));
+            stopMarkerLayers = [];
+            selectedRouteId = null;
+
+            document.getElementById('activeRouteBanner').classList.add('hidden');
+            document.getElementById('clearPolylineBtn').classList.add('hidden');
+            document.getElementById('clearPolylineBtn').classList.remove('flex');
         }
 
         function initGeolocation() {
@@ -256,8 +652,7 @@
                             userAccuracyCircle.setRadius(accuracy);
                         }
                     },
-                    function(error) {
-                    },
+                    function(error) {},
                     { enableHighAccuracy: true }
                 );
             }
@@ -273,16 +668,6 @@
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
                     map.setView([lat, lng], 14);
-                    if (!userMarker) {
-                        userMarker = L.marker([lat, lng], {
-                            icon: L.divIcon({
-                                className: '',
-                                html: '<div style="width:16px;height:16px;background:#38bdf8;border:3px solid #ffffff;border-radius:50%;box-shadow:0 0 12px #38bdf8;"></div>',
-                                iconSize: [16, 16],
-                                iconAnchor: [8, 8]
-                            })
-                        }).addTo(map);
-                    }
                 }, function() {
                     showToast("GPS location unavailable");
                 });
@@ -298,15 +683,15 @@
             if (view === 'commuter') {
                 commuterView.classList.remove('hidden');
                 driverView.classList.add('hidden');
-                commuterBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 bg-blue-600 text-white shadow-md shadow-blue-600/30";
-                driverBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-400 hover:text-white";
+                commuterBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30";
+                driverBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
                 setTimeout(() => { map.invalidateSize(); }, 200);
                 showToast("Switched to Commuter View");
             } else {
                 commuterView.classList.add('hidden');
                 driverView.classList.remove('hidden');
-                driverBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30";
-                commuterBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-400 hover:text-white";
+                driverBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30";
+                commuterBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
                 showToast("Switched to Driver Portal");
             }
         }
@@ -334,6 +719,8 @@
 
             filtered.forEach(r => {
                 const isBus = r.type === 'bus';
+                const fareDisplay = isBus ? 'FREE' : `₱${calculateFare(r.totalKm, passengerType).toFixed(2)}`;
+
                 const iconHtml = `<div style="width:28px;height:28px;background:${r.color};border:2px solid #ffffff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffffff;font-size:11px;font-weight:800;box-shadow:0 4px 6px rgba(0,0,0,0.3);"><i class="fa-solid fa-${isBus ? 'bus' : 'van-shuttle'}"></i></div>`;
                 const customIcon = L.divIcon({
                     className: '',
@@ -343,14 +730,26 @@
                 });
 
                 const marker = L.marker([r.lat, r.lng], { icon: customIcon }).addTo(map);
-                marker.bindPopup(`<div style="color:#0f172a;font-weight:700;">${r.name}</div><div style="font-size:11px;color:#0284c7;font-weight:bold;">Schedule: ${r.schedule}</div><div style="font-size:10px;color:#334155;margin-top:2px;max-width:200px;">Stops: ${r.stops}</div>`);
+                marker.bindPopup(`
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;color:#0f172a;">
+                        <div style="font-weight:800;font-size:13px;">${r.name}</div>
+                        <div style="font-size:11px;color:#0284c7;font-weight:700;margin-top:2px;">Fare: ${fareDisplay} (${r.totalKm} km)</div>
+                        <div style="font-size:10px;color:#334155;margin-top:2px;">Stops: ${r.stops}</div>
+                        <button onclick="drawRouteLine('${r.id}')" style="margin-top:6px;width:100%;background:#0284c7;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">
+                            Show Polyline Route
+                        </button>
+                    </div>
+                `);
                 markerLayers.push(marker);
 
                 const card = document.createElement('div');
-                card.className = `bg-slate-950 border border-slate-800 hover:border-slate-700 rounded-2xl p-3.5 flex flex-col space-y-2 transition cursor-pointer`;
-                card.onclick = () => {
-                    map.setView([r.lat, r.lng], 15);
-                    marker.openPopup();
+                card.className = `bg-slate-950 border ${selectedRouteId === r.id ? 'border-sky-500' : 'border-slate-800'} hover:border-slate-700 rounded-2xl p-3 flex flex-col space-y-2 transition cursor-pointer`;
+                card.onclick = (e) => {
+                    if (!e.target.closest('button')) {
+                        map.setView([r.lat, r.lng], 14);
+                        drawRouteLine(r.id);
+                        marker.openPopup();
+                    }
                 };
                 card.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -360,16 +759,21 @@
                             </div>
                             <div>
                                 <div class="font-extrabold text-xs text-white">${r.name}</div>
-                                <div class="text-[10px] text-emerald-400 font-bold flex items-center space-x-1 mt-0.5">
+                                <div class="text-[10px] text-emerald-400 font-bold flex items-center space-x-1.5 mt-0.5">
                                     <i class="fa-regular fa-clock"></i>
-                                    <span>${r.schedule} | Fare: ${r.fare}</span>
+                                    <span>${r.schedule}</span>
+                                    <span class="text-slate-600">•</span>
+                                    <span class="text-sky-400 font-black">${fareDisplay}</span>
                                 </div>
                             </div>
                         </div>
-                        <span class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-0.5 rounded-lg">${isBus ? 'Free Bus' : 'Jeepney'}</span>
+                        <button onclick="drawRouteLine('${r.id}')" class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-1 rounded-lg hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-route mr-1"></i>Draw Path
+                        </button>
                     </div>
-                    <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
-                        <strong class="text-slate-300">Stops:</strong> ${r.stops}
+                    <div class="text-[10px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                        <span class="truncate pr-2"><strong class="text-slate-300">Stops:</strong> ${r.stops}</span>
+                        <span class="text-slate-500 text-[9px] shrink-0">${r.totalKm} km</span>
                     </div>
                 `;
                 vehicleList.appendChild(card);
@@ -378,8 +782,8 @@
 
         function updateBusPositions() {
             busRoutes.forEach(r => {
-                r.lat += (Math.random() - 0.5) * 0.001;
-                r.lng += (Math.random() - 0.5) * 0.001;
+                r.lat += (Math.random() - 0.5) * 0.0008;
+                r.lng += (Math.random() - 0.5) * 0.0008;
             });
             renderRoutes();
         }
@@ -393,9 +797,9 @@
             ['all', 'puj', 'bus'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
                 if (t === type) {
-                    btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0";
+                    btn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0";
                 } else {
-                    btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0";
+                    btn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0";
                 }
             });
             renderRoutes();
@@ -407,8 +811,108 @@
         }
 
         function refreshVehicles() {
-            showToast("Live transit tracking data updated successfully");
+            showToast("Live transit tracking data updated");
             renderRoutes();
+        }
+
+        function openFareModal() {
+            const modal = document.getElementById('fareModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            calculateFareFromSlider();
+        }
+
+        function closeFareModal() {
+            const modal = document.getElementById('fareModal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function setPassengerType(type) {
+            passengerType = type;
+            const regBtn = document.getElementById('pTypeRegular');
+            const discBtn = document.getElementById('pTypeDiscount');
+
+            if (type === 'regular') {
+                regBtn.className = "px-3 py-1 rounded-lg text-[11px] font-bold bg-sky-500 text-white transition";
+                discBtn.className = "px-3 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition";
+                document.getElementById('baseRateTag').innerText = "₱14.00";
+                document.getElementById('addRateTag').innerText = "+₱2.00/km";
+            } else {
+                discBtn.className = "px-3 py-1 rounded-lg text-[11px] font-bold bg-amber-500 text-slate-950 transition";
+                regBtn.className = "px-3 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition";
+                document.getElementById('baseRateTag').innerText = "₱11.25";
+                document.getElementById('addRateTag').innerText = "+₱1.60/km";
+            }
+            calculateFareFromSlider();
+            calculateP2PFare();
+            renderRoutes();
+        }
+
+        function calculateFareFromSlider() {
+            const dist = parseFloat(document.getElementById('calcDistanceInput').value);
+            document.getElementById('calcDistanceVal').innerText = `${dist.toFixed(1)} km`;
+
+            const fare = calculateFare(dist, passengerType);
+            document.getElementById('calcFareResult').innerText = `₱${fare.toFixed(2)}`;
+        }
+
+        function populateP2PRoutes() {
+            const routeSelect = document.getElementById('p2pRouteSelect');
+            routeSelect.innerHTML = busRoutes.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            updateP2POptions();
+        }
+
+        function updateP2POptions() {
+            const routeId = document.getElementById('p2pRouteSelect').value;
+            const route = busRoutes.find(r => r.id === routeId);
+            const origSelect = document.getElementById('p2pOriginSelect');
+            const destSelect = document.getElementById('p2pDestSelect');
+
+            if (!route || !route.waypoints) return;
+
+            origSelect.innerHTML = route.waypoints.map((wp, i) => `<option value="${i}">${wp[2]}</option>`).join('');
+            destSelect.innerHTML = route.waypoints.map((wp, i) => `<option value="${i}">${wp[2]}</option>`).join('');
+            destSelect.value = route.waypoints.length - 1;
+
+            calculateP2PFare();
+        }
+
+        function calculateP2PFare() {
+            const routeId = document.getElementById('p2pRouteSelect').value;
+            const route = busRoutes.find(r => r.id === routeId);
+            const idx1 = parseInt(document.getElementById('p2pOriginSelect').value);
+            const idx2 = parseInt(document.getElementById('p2pDestSelect').value);
+
+            if (!route || isNaN(idx1) || isNaN(idx2)) return;
+
+            const totalStops = route.waypoints.length - 1;
+            const numStops = Math.abs(idx2 - idx1);
+
+            let estKm = Math.round((numStops / totalStops) * route.totalKm);
+            if (estKm < 1) estKm = 1;
+
+            const fare = route.type === 'bus' ? 0 : calculateFare(estKm, passengerType);
+
+            document.getElementById('p2pDistText').innerText = `${estKm} km segment`;
+            document.getElementById('p2pFareText').innerText = route.type === 'bus' ? 'FREE' : `₱${fare.toFixed(2)}`;
+        }
+
+        function populateQuickFareTable() {
+            const tbody = document.getElementById('quickFareTable');
+            let html = '';
+            for (let km = 1; km <= 25; km++) {
+                const reg = calculateFare(km, 'regular').toFixed(2);
+                const disc = calculateFare(km, 'discount').toFixed(2);
+                html += `
+                    <tr>
+                        <td class="p-1.5 font-bold text-sky-400">${km} km</td>
+                        <td class="p-1.5">₱${reg}</td>
+                        <td class="p-1.5 text-amber-400">₱${disc}</td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
         }
 
         function toggleBroadcast() {
@@ -423,25 +927,24 @@
             const loadContainer = document.getElementById('loadSelectorContainer');
 
             if (isBroadcasting) {
-                card.className = "bg-slate-950 border-2 border-emerald-500/80 rounded-3xl p-6 text-center mb-5 transition-all shadow-2xl shadow-emerald-500/20 relative overflow-hidden";
-                glow.classList.remove('opacity-0');
+                card.className = "bg-slate-950 border-2 border-emerald-500/80 rounded-3xl p-5 text-center mb-4 transition-all shadow-2xl shadow-emerald-500/20 relative overflow-hidden";
                 glow.className = "absolute inset-0 bg-emerald-500/10 opacity-100 transition-opacity";
-                icon.className = "w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto mb-4 text-3xl text-emerald-400 transition-all shadow-inner animate-pulse";
+                icon.className = "w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto mb-3 text-2xl text-emerald-400 transition-all shadow-inner animate-pulse";
                 title.innerText = "Broadcasting Live Active";
                 desc.innerText = "Commuters can now view your precise vehicle location and live seat availability in real time.";
-                btn.className = "w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow-lg shadow-rose-600/40 transition flex items-center justify-center space-x-2";
+                btn.className = "w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs shadow-lg shadow-rose-600/40 transition flex items-center justify-center space-x-2";
                 btnText.innerText = "Stop Broadcasting";
-                loadContainer.className = "bg-slate-950 border border-slate-800 rounded-2xl p-4 opacity-100 pointer-events-auto transition-all";
-                showToast("One-touch broadcast started successfully!");
+                loadContainer.className = "bg-slate-950 border border-slate-800 rounded-2xl p-3.5 opacity-100 pointer-events-auto transition-all";
+                showToast("One-touch broadcast started!");
             } else {
-                card.className = "bg-slate-950 border-2 border-slate-800 rounded-3xl p-6 text-center mb-5 transition-all shadow-xl relative overflow-hidden";
+                card.className = "bg-slate-950 border-2 border-slate-800 rounded-3xl p-5 text-center mb-4 transition-all shadow-xl relative overflow-hidden";
                 glow.className = "absolute inset-0 bg-blue-600/5 opacity-0 transition-opacity";
-                icon.className = "w-20 h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto mb-4 text-3xl text-slate-400 transition-all shadow-inner";
+                icon.className = "w-16 h-16 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto mb-3 text-2xl text-slate-400 transition-all shadow-inner";
                 title.innerText = "Broadcasting Paused";
                 desc.innerText = "Tap below to start sharing your real-time vehicle location and passenger load with commuters.";
-                btn.className = "w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-sm shadow-lg shadow-blue-600/40 transition flex items-center justify-center space-x-2";
+                btn.className = "w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg shadow-blue-600/40 transition flex items-center justify-center space-x-2";
                 btnText.innerText = "Start One-Touch Broadcast";
-                loadContainer.className = "bg-slate-950 border border-slate-800 rounded-2xl p-4 opacity-50 pointer-events-none transition-all";
+                loadContainer.className = "bg-slate-950 border border-slate-800 rounded-2xl p-3.5 opacity-50 pointer-events-none transition-all";
                 showToast("Broadcast paused.");
             }
         }
@@ -451,12 +954,12 @@
             ['many', 'few', 'full'].forEach(s => {
                 const btn = document.getElementById(`load-${s}`);
                 if (s === status) {
-                    btn.className = `py-3 px-2 rounded-xl border border-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-500/80 bg-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-500/20 text-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-400 font-bold text-xs flex flex-col items-center space-y-1 transition`;
+                    btn.className = `py-2.5 px-2 rounded-xl border border-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-500/80 bg-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-500/20 text-${s === 'many' ? 'emerald' : s === 'few' ? 'amber' : 'rose'}-400 font-bold text-[11px] flex flex-col items-center space-y-1 transition`;
                 } else {
-                    btn.className = "py-3 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-xs flex flex-col items-center space-y-1 transition";
+                    btn.className = "py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-bold text-[11px] flex flex-col items-center space-y-1 transition";
                 }
             });
-            showToast(`Capacity updated to: ${status === 'many' ? 'Many Seats' : status === 'few' ? 'Few Seats' : 'Full / No Vacancy'}`);
+            showToast(`Capacity: ${status === 'many' ? 'Many Seats' : status === 'few' ? 'Few Seats' : 'Full / No Vacancy'}`);
         }
 
         function showToast(msg) {
@@ -468,7 +971,7 @@
             setTimeout(() => {
                 toast.classList.remove('opacity-100');
                 toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
+            }, 2400);
         }
     </script>
 </body>

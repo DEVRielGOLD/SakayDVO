@@ -21,8 +21,8 @@
     <div class="w-full sm:max-w-[420px] h-screen sm:h-[844px] bg-slate-950 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden border-0 sm:border-8 sm:border-slate-800 relative">
         <header class="px-6 py-4 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-30">
             <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center justify-center text-sky-400">
+                <div class="flex items-center space-x-1">
+                    <div class="flex items-center justify-center text-white ml-2 mr-1">
                         <i class="fa-solid fa-bus text-2xl drop-shadow-md"></i>
                     </div>
                     <div>
@@ -257,7 +257,6 @@
                         }
                     },
                     function(error) {
-                        console.log('Geolocation error or permission denied');
                     },
                     { enableHighAccuracy: true }
                 );

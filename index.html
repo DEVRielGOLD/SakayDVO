@@ -185,9 +185,9 @@ let transitMarkers = [];
 
 function initMap() {
   map = L.map('map', { zoomControl: false }).setView([7.1907, 125.4553], 13);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
-    subdomains: 'abcd'
+    attribution: 'Tiles &copy; Esri'
   }).addTo(map);
   locateUser();
   renderTransitList(transitData);

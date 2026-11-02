@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <h1 class="font-extrabold text-lg tracking-tight text-white leading-tight">Sakay<span class="text-sky-400">DVO</span></h1>
-                        <p class="text-[10px] text-slate-400 font-medium">Davao City Transit Intelligence</p>
+                        <p class="text-[10px] text-slate-400 font-medium">Davao City Sakay Tracker</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -64,6 +64,9 @@
                         <button onclick="setFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Transit</button>
                         <button onclick="setFilter('puj')" id="filter-puj" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Jeepney</button>
                         <button onclick="setFilter('bus')" id="filter-bus" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Free Bus</button>
+                        <button onclick="setFilter('mintal')" id="filter-mintal" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Mintal Lines</button>
+                        <button onclick="setFilter('toril')" id="filter-toril" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Toril Lines</button>
+                        <button onclick="setFilter('panacan')" id="filter-panacan" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Panacan Lines</button>
                     </div>
                 </div>
 
@@ -320,7 +323,14 @@
             vehicleList.innerHTML = '';
 
             const filtered = busRoutes.filter(r => {
-                const matchesFilter = (currentFilter === 'all' || r.type === currentFilter);
+                let matchesFilter = true;
+                if (currentFilter === 'all') {
+                    matchesFilter = true;
+                } else if (currentFilter === 'puj' || currentFilter === 'bus') {
+                    matchesFilter = (r.type === currentFilter);
+                } else {
+                    matchesFilter = (r.category === currentFilter);
+                }
                 const matchesSearch = r.name.toLowerCase().includes(searchQuery) || r.stops.toLowerCase().includes(searchQuery);
                 return matchesFilter && matchesSearch;
             });
@@ -390,7 +400,7 @@
 
         function setFilter(type) {
             currentFilter = type;
-            ['all', 'puj', 'bus'].forEach(t => {
+            ['all', 'puj', 'bus', 'mintal', 'toril', 'panacan'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
                 if (t === type) {
                     btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0";

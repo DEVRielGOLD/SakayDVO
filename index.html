@@ -61,10 +61,9 @@
                         </button>
                     </div>
                     <div class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
-                        <button onclick="setFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Routes</button>
-                        <button onclick="setFilter('mintal')" id="filter-mintal" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Mintal Lines</button>
-                        <button onclick="setFilter('toril')" id="filter-toril" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Toril Lines</button>
-                        <button onclick="setFilter('panacan')" id="filter-panacan" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Panacan Lines</button>
+                        <button onclick="setFilter('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0">All Transit</button>
+                        <button onclick="setFilter('puj')" id="filter-puj" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Jeepney</button>
+                        <button onclick="setFilter('bus')" id="filter-bus" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-sky-500 transition shrink-0">Free Bus</button>
                     </div>
                 </div>
 
@@ -84,7 +83,7 @@
                     <div class="w-12 h-1 bg-slate-700 rounded-full mx-auto mb-3"></div>
                     <div class="flex items-center justify-between mb-3">
                         <h2 class="font-bold text-sm text-slate-200 flex items-center">
-                            <i class="fa-solid fa-bus text-sky-400 mr-2"></i> Free Bus Libre & PUJ Schedules
+                            <i class="fa-solid fa-bus text-sky-400 mr-2"></i> Jeepney & Free Bus Schedules
                         </h2>
                         <span id="vehicleCount" class="text-xs bg-slate-800 text-sky-400 px-2 py-0.5 rounded-full font-semibold border border-slate-700">11 routes</span>
                     </div>
@@ -98,7 +97,7 @@
                         <i class="fa-solid fa-id-card"></i>
                     </div>
                     <div>
-                        <h2 class="font-bold text-sm text-white">Free Bus / PUJ Driver Portal</h2>
+                        <h2 class="font-bold text-sm text-white">Jeepney & Free Bus Driver Portal</h2>
                         <p class="text-xs text-slate-300">Broadcast your live location and capacity in 1-touch.</p>
                     </div>
                 </div>
@@ -106,6 +105,8 @@
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-4">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Assigned Route</label>
                     <select id="driverRouteSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-semibold text-white focus:outline-none focus:border-amber-500">
+                        <option>PUJ 5A: Toril -> Roxas Blvd (Real-time)</option>
+                        <option>PUJ 10: Mintal -> Agdao (Real-time)</option>
                         <option>R102: Toril -> GE Torres (6AM-10AM / 4PM-9PM)</option>
                         <option>R103: Toril -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R402: Mintal -> GE Torres (6AM-10AM / 4PM-9PM)</option>
@@ -115,8 +116,6 @@
                         <option>R763: Panacan (via Buhangin) -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R783: Panacan (via Angliongto) -> Roxas (6AM-10AM / 4PM-9PM)</option>
                         <option>R793: Panacan (via R Castillo) -> Roxas (6AM-10AM / 4PM-9PM)</option>
-                        <option>PUJ 5A: Toril -> Roxas Blvd (Real-time)</option>
-                        <option>PUJ 10: Mintal -> Agdao (Real-time)</option>
                     </select>
                 </div>
 
@@ -127,7 +126,7 @@
                             <i class="fa-solid fa-tower-broadcast"></i>
                         </div>
                         <h3 id="broadcastTitle" class="font-extrabold text-xl text-white mb-1">Broadcasting Paused</h3>
-                        <p id="broadcastDesc" class="text-xs text-slate-400 mb-6 max-w-[260px] mx-auto">Tap below to start sharing your real-time bus location and passenger load with commuters.</p>
+                        <p id="broadcastDesc" class="text-xs text-slate-400 mb-6 max-w-[260px] mx-auto">Tap below to start sharing your real-time vehicle location and passenger load with commuters.</p>
                         <button onclick="toggleBroadcast()" id="broadcastBtn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-sm shadow-lg shadow-blue-600/40 transition flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-power-off"></i>
                             <span id="broadcastBtnText">Start One-Touch Broadcast</span>
@@ -182,6 +181,8 @@
 
     <script>
         const busRoutes = [
+            { id: 'PUJ5A', category: 'toril', type: 'puj', name: 'Traditional PUJ - 5A', schedule: 'Real-time (5AM-10PM)', stops: 'Toril Crossing, Bangkal, Matina Crossing, Ecoland Terminal, Roxas Blvd', lat: 7.0850, lng: 125.5150, color: '#eab308', fare: '₱15.00' },
+            { id: 'PUJ10', category: 'mintal', type: 'puj', name: 'Traditional PUJ - 10', schedule: 'Real-time (5AM-10PM)', stops: 'Mintal, Ulas, Bangkal, Matina Crossing, Roxas Ave., Agdao', lat: 7.1200, lng: 125.5350, color: '#eab308', fare: '₱16.00' },
             { id: 'R102', category: 'toril', type: 'bus', name: 'R102: Toril -> GE Torres', schedule: '6AM-10AM & 4PM-9PM', stops: 'Toril District Hall, Fusion GTH, Pepsi Dumoy, Bago Aplaya Crossing, Gulf View, Jollibee Puan, Coke Ulas, Ateneo Senior High, SPED Bangkal, Tahimik Ave. Matina, Matina Crossing, Kawayan Drive, GE Torres', lat: 7.1857, lng: 125.4493, color: '#3b82f6', fare: '₱0.00 (Free)' },
             { id: 'R103', category: 'toril', type: 'bus', name: 'R103: Toril -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Toril District Hall, Fusion GTH, Pepsi Dumoy, Bago Aplaya Crossing, Coastal Rd. Times Beach, Ecoland Terminal, Felcris Centrale, Davao City Police Office, CM Recto Ave., Red Cross Roxas', lat: 7.1807, lng: 125.4453, color: '#3b82f6', fare: '₱0.00 (Free)' },
             { id: 'R402', category: 'mintal', type: 'bus', name: 'R402: Mintal -> GE Torres', schedule: '6AM-10AM & 4PM-9PM', stops: 'Mintal Palengke, Sto Niño Mintal, Green Meadows, Catalunan Pequeño, Wellspring Village, Ateneo Senior High, SPED Bangkal, Tahimik Ave, Matina Crossing, Kawayan Drive, DGT, Water Dist. Matina, NCCC Maa', lat: 7.2057, lng: 125.4153, color: '#10b981', fare: '₱0.00 (Free)' },
@@ -190,9 +191,7 @@
             { id: 'R603', category: 'panacan', type: 'bus', name: 'R603: Buhangin -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Citymall Northtown, Jollibee Cabantian, NHA Buhangin, Buhangin Gym, Ladislawa, Abreeza Mall, NCCC Mall VP, Red Cross Roxas, Davao Mental Hospital, JP Laurel Flyover', lat: 7.1107, lng: 125.6203, color: '#8b5cf6', fare: '₱0.00 (Free)' },
             { id: 'R763', category: 'panacan', type: 'bus', name: 'R763: Panacan (via Buhangin) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Panacan Bypass Rd., LPU Davao, Sta. Lucia Mall, Mcdo Pagibig, NHA Buhangin, Buhangin Gym, Ladislawa, Abreeza Mall, NCCC Mall VP', lat: 7.1307, lng: 125.6403, color: '#ec4899', fare: '₱0.00 (Free)' },
             { id: 'R783', category: 'panacan', type: 'bus', name: 'R783: Panacan (via Angliongto) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Panacan Bypass Rd., LPU Davao, Sta. Lucia Mall, Mcdo Pagibig, Punad Bypass, Angliongto Arcade, Phil. Nikkei Jin Kai, SM Lanang, Carmelite Lanang', lat: 7.1207, lng: 125.6303, color: '#06b6d4', fare: '₱0.00 (Free)' },
-            { id: 'R793', category: 'panacan', type: 'bus', name: 'R793: Panacan (via R Castillo) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Sasa Palengke, Philippine Ports Authority, Shell Doña Salud, Old Airport, Doña Pilar, Nova Tierra, Jerome R. Castillo, Holy Cross R. Castillo, Agdao Flyover', lat: 7.1407, lng: 125.6503, color: '#f43f5e', fare: '₱0.00 (Free)' },
-            { id: 'PUJ5A', category: 'toril', type: 'puj', name: 'Traditional PUJ - 5A', schedule: 'Real-time (5AM-10PM)', stops: 'Toril Crossing, Bangkal, Matina Crossing, Ecoland Terminal, Roxas Blvd', lat: 7.0850, lng: 125.5150, color: '#eab308', fare: '₱15.00' },
-            { id: 'PUJ10', category: 'mintal', type: 'puj', name: 'Traditional PUJ - 10', schedule: 'Real-time (5AM-10PM)', stops: 'Mintal, Ulas, Bangkal, Matina Crossing, Roxas Ave., Agdao', lat: 7.1200, lng: 125.5350, color: '#eab308', fare: '₱16.00' }
+            { id: 'R793', category: 'panacan', type: 'bus', name: 'R793: Panacan (via R Castillo) -> Roxas', schedule: '6AM-10AM & 4PM-9PM', stops: 'Panacan Depot, Sasa Palengke, Philippine Ports Authority, Shell Doña Salud, Old Airport, Doña Pilar, Nova Tierra, Jerome R. Castillo, Holy Cross R. Castillo, Agdao Flyover', lat: 7.1407, lng: 125.6503, color: '#f43f5e', fare: '₱0.00 (Free)' }
         ];
 
         let currentFilter = 'all';
@@ -258,7 +257,6 @@
                         }
                     },
                     function(error) {
-                        console.log('Geolocation error or permission denied');
                     },
                     { enableHighAccuracy: true }
                 );
@@ -322,7 +320,7 @@
             vehicleList.innerHTML = '';
 
             const filtered = busRoutes.filter(r => {
-                const matchesFilter = (currentFilter === 'all' || r.category === currentFilter);
+                const matchesFilter = (currentFilter === 'all' || r.type === currentFilter);
                 const matchesSearch = r.name.toLowerCase().includes(searchQuery) || r.stops.toLowerCase().includes(searchQuery);
                 return matchesFilter && matchesSearch;
             });
@@ -368,7 +366,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-0.5 rounded-lg">${isBus ? 'Free Bus' : 'PUJ'}</span>
+                        <span class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-0.5 rounded-lg">${isBus ? 'Free Bus' : 'Jeepney'}</span>
                     </div>
                     <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
                         <strong class="text-slate-300">Stops:</strong> ${r.stops}
@@ -392,7 +390,7 @@
 
         function setFilter(type) {
             currentFilter = type;
-            ['all', 'mintal', 'toril', 'panacan'].forEach(t => {
+            ['all', 'puj', 'bus'].forEach(t => {
                 const btn = document.getElementById(`filter-${t}`);
                 if (t === type) {
                     btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white shadow-sm transition shrink-0";

@@ -14,6 +14,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .leaflet-container { width: 100%; height: 100%; background: #0f172a; }
+        .leaflet-tile { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-0 sm:p-4">
@@ -210,9 +211,8 @@
                 return;
             }
             map = L.map('map', { zoomControl: false }).setView([7.1907, 125.4553], 13);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                maxZoom: 19,
-                subdomains: 'abcd'
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19
             }).addTo(map);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
         }

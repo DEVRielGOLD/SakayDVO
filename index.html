@@ -305,13 +305,13 @@
                 name: 'Traditional PUJ - 5A', 
                 schedule: 'Real-time (5AM-10PM)', 
                 stops: 'Toril Crossing, Bangkal, Matina Crossing, Ecoland Terminal, Roxas Blvd', 
-                lat: 7.0850, 
-                lng: 125.5150, 
+                lat: 7.0185, 
+                lng: 125.4985, 
                 color: '#f59e0b', 
                 totalKm: 16,
                 waypoints: [
-                    [7.0205, 125.4985, 'Toril Crossing'],
-                    [7.0425, 125.5210, 'Pepsi Dumoy'],
+                    [7.0185, 125.4985, 'Toril Crossing'],
+                    [7.0392, 125.5182, 'Pepsi Dumoy'],
                     [7.0620, 125.5410, 'Ulas Junction'],
                     [7.0760, 125.5580, 'Bangkal'],
                     [7.0850, 125.5750, 'Matina Crossing'],
@@ -326,8 +326,8 @@
                 name: 'Traditional PUJ - 10', 
                 schedule: 'Real-time (5AM-10PM)', 
                 stops: 'Mintal, Ulas, Bangkal, Matina Crossing, Roxas Ave., Agdao', 
-                lat: 7.1200, 
-                lng: 125.5350, 
+                lat: 7.1285, 
+                lng: 125.5010, 
                 color: '#f59e0b', 
                 totalKm: 18,
                 waypoints: [
@@ -366,8 +366,8 @@
                 name: 'R102: Toril -> GE Torres', 
                 schedule: '6AM-10AM & 4PM-9PM', 
                 stops: 'Toril District Hall, Dumoy, Bago Aplaya, Ulas, Bangkal, Matina, GE Torres', 
-                lat: 7.0250, 
-                lng: 125.5000, 
+                lat: 7.0180, 
+                lng: 125.4960, 
                 color: '#3b82f6', 
                 totalKm: 17,
                 waypoints: [
@@ -387,8 +387,8 @@
                 name: 'R103: Toril -> Roxas', 
                 schedule: '6AM-10AM & 4PM-9PM', 
                 stops: 'Toril Hall, Dumoy, Bago Aplaya, Coastal Rd, Ecoland, Roxas', 
-                lat: 7.0220, 
-                lng: 125.4980, 
+                lat: 7.0180, 
+                lng: 125.4960, 
                 color: '#3b82f6', 
                 totalKm: 19,
                 waypoints: [
@@ -466,8 +466,8 @@
                 name: 'R603: Buhangin -> Roxas', 
                 schedule: '6AM-10AM & 4PM-9PM', 
                 stops: 'Citymall Northtown, Cabantian, Buhangin Gym, Abreeza Mall, Roxas', 
-                lat: 7.1210, 
-                lng: 125.6150, 
+                lat: 7.1350, 
+                lng: 125.6190, 
                 color: '#8b5cf6', 
                 totalKm: 12,
                 waypoints: [
@@ -504,8 +504,8 @@
                 name: 'R783: Panacan (via Angliongto) -> Roxas', 
                 schedule: '6AM-10AM & 4PM-9PM', 
                 stops: 'Panacan Depot, Angliongto, Nikkei Jin Kai, SM Lanang, Roxas', 
-                lat: 7.1450, 
-                lng: 125.6550, 
+                lat: 7.1490, 
+                lng: 125.6580, 
                 color: '#06b6d4', 
                 totalKm: 15,
                 waypoints: [
@@ -735,21 +735,16 @@
                         <div style="font-weight:800;font-size:13px;">${r.name}</div>
                         <div style="font-size:11px;color:#0284c7;font-weight:700;margin-top:2px;">Fare: ${fareDisplay} (${r.totalKm} km)</div>
                         <div style="font-size:10px;color:#334155;margin-top:2px;">Stops: ${r.stops}</div>
-                        <button onclick="drawRouteLine('${r.id}')" style="margin-top:6px;width:100%;background:#0284c7;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">
-                            Show Polyline Route
-                        </button>
                     </div>
                 `);
                 markerLayers.push(marker);
 
                 const card = document.createElement('div');
-                card.className = `bg-slate-950 border ${selectedRouteId === r.id ? 'border-sky-500' : 'border-slate-800'} hover:border-slate-700 rounded-2xl p-3 flex flex-col space-y-2 transition cursor-pointer`;
-                card.onclick = (e) => {
-                    if (!e.target.closest('button')) {
-                        map.setView([r.lat, r.lng], 14);
-                        drawRouteLine(r.id);
-                        marker.openPopup();
-                    }
+                card.className = `bg-slate-950 border ${selectedRouteId === r.id ? 'border-sky-500 bg-sky-950/20' : 'border-slate-800'} hover:border-slate-700 rounded-2xl p-3 flex flex-col space-y-2 transition cursor-pointer`;
+                card.onclick = () => {
+                    map.setView([r.lat, r.lng], 14);
+                    drawRouteLine(r.id);
+                    marker.openPopup();
                 };
                 card.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -767,9 +762,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="drawRouteLine('${r.id}')" class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-1 rounded-lg hover:bg-slate-800 transition">
-                            <i class="fa-solid fa-route mr-1"></i>Draw Path
-                        </button>
+                        <span class="text-[10px] font-extrabold ${isBus ? 'text-sky-400 bg-sky-500/10 border-sky-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20'} border px-2 py-0.5 rounded-lg">${isBus ? 'Free Bus' : 'Jeepney'}</span>
                     </div>
                     <div class="text-[10px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-slate-800/80 flex justify-between items-center">
                         <span class="truncate pr-2"><strong class="text-slate-300">Stops:</strong> ${r.stops}</span>
